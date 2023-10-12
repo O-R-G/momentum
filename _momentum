@@ -66,7 +66,7 @@ done
 # CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in '     #ALEXANDRAWEIRSTALL
 # CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in '     #DISCOTECAFLAMINGSTAR
 # CMD+='layout --fit-to-margins 1.5in --align left --landscape 11x17in '     #OCTOBER1314152023
-CMD+='layout --fit-to-margins 3.0in --align left --landscape 11x17in '     #DAILY12TO4PM
+# CMD+='layout --fit-to-margins 3.0in --align left --landscape 11x17in '     #DAILY12TO4PM
 
 CMD+='linemerge '
 CMD+='write '$OUT
