@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# M O M E N T U M
+
+# Usage: _momentum -t TEXTTOPLOT -p
+# Plot text in circle at set size using vpype and axicli
+
+# arguments
+
+while getopts t:p opts; do
+   case ${opts} in
+      t) TEXT=${OPTARG} ;;
+      p) PLOT=true ;;
+   esac
+done
+
+Y=0
+# SIZE=50       # MOMENTUM LOGO
+SIZE=284        # MOMENTUM POSTER 1 
+ORIGIN="0 0"
+CMD='vpype '
+OUT='out.svg'
+
+# text
+
+if [[ -z "$TEXT" ]]; then
+    # TEXT='MOMENTUM'
+    # TEXT='ALEXANDRAWAIERSTALL'
+    # TEXT='DISCOTECAFLAMINGSTAR'
+    # TEXT='OCTOBER1314152023'
+    TEXT='DAILY12TO4PM'
+fi
+
+# calculate circle
+
+# size of circle (X) based on CHARS
+# so always the same size type and same spacing
+# but circle changes size
+# height of each letter should be type size
+# add them all up and get cicrumfrence
+# from circumfrence, get radius
+# C = 2 * PI * R, R = C / PI
+
+CHARS=${#TEXT}
+ROTATE=-`bc -l <<< "360 / $CHARS"`
+PI=3.14159265358979323846264338327950288419716939937510
+SIZE_ADJ=41      # adjust letterspacing with $RADIUS    
+CIRCUM=`bc -l <<< "($SIZE - $SIZE_ADJ) * $CHARS"`
+RADIUS=`bc -l <<< "$CIRCUM / (2 * $PI)"`
+X=$RADIUS
+
+foo=$TEXT
+for (( i=0; i<${#foo}; i++ )); do
+    echo "${foo:$i:1}"
+    # ROTATE=$(( ROTATE-5 ))
+    # ROTATE=$(( ROTATE+7 ))
+    # X=$(( X+7 ))
+    # Y=$(( Y-10 ))
+    TEXT="${foo:$i:1}"
+    CMD+='text --align center --size '$SIZE' --position '$X' '$Y' "'$TEXT'" rotate --origin 0 0 -- '$ROTATE' '
+    # CMD+='rotate -- 15 '
+done
+
+# layout
+
+# CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in '     #ALEXANDRAWEIRSTALL
+# CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in '     #DISCOTECAFLAMINGSTAR
+# CMD+='layout --fit-to-margins 1.5in --align left --landscape 11x17in '     #OCTOBER1314152023
+CMD+='layout --fit-to-margins 3.0in --align left --landscape 11x17in '     #DAILY12TO4PM
+
+CMD+='linemerge '
+CMD+='write '$OUT
+
+# print
+
+echo $CHARS
+echo $CIRCUM
+echo $RADIUS
+eval $CMD
+open out.svg
+# open -a Safari out.svg
+if [[ -n "$PLOT" ]]; then
+    echo "PLOTTING ..."
+    axicli out.svg --model 2 --progress
+fi
+exit
