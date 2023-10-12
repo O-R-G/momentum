@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="tiny" height="21.77307629cm" version="1.2" viewBox="0 0 822.9194187412891 822.9194187412891" width="21.77307629cm">
+  <metadata>
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:source>vpype text --align center --size 284 --position 309.39720937064453273471 0 M rotate --origin 0 0 -- -45.00000000000000000000 text --align center --size 284 --position 309.39720937064453273471 0 O rotate --origin 0 0 -- -45.00000000000000000000 text --align center --size 284 --position 309.39720937064453273471 0 M rotate --origin 0 0 -- -45.00000000000000000000 text --align center --size 284 --position 309.39720937064453273471 0 E rotate --origin 0 0 -- -45.00000000000000000000 text --align center --size 284 --position 309.39720937064453273471 0 N rotate --origin 0 0 -- -45.00000000000000000000 text --align center --size 284 --position 309.39720937064453273471 0 T rotate --origin 0 0 -- -45.00000000000000000000 text --align center --size 284 --position 309.39720937064453273471 0 U rotate --origin 0 0 -- -45.00000000000000000000 text --align center --size 284 --position 309.39720937064453273471 0 M rotate --origin 0 0 -- -45.00000000000000000000 linemerge write out.svg
+</dc:source>
+        <dc:date>2023-10-12T12:39:57.838547</dc:date>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs/>
+  <g fill="none" id="layer1" inkscape:groupmode="layer" inkscape:label="1" stroke="#0000ff" style="display:inline">
+    <polyline points="822.9194,486.8972 822.9194,300.5222 822.9194,300.5222 751.9194,486.8972 751.9194,486.8972 680.9194,300.5222 680.9194,300.5222 680.9194,486.8972"/>
+    <polygon points="707.3815,556.7678 688.5548,550.4922 663.4525,550.4922 644.6258,556.7678 619.5235,569.3189 588.1456,600.6968 575.5945,625.7991 569.3189,644.6258 569.3189,669.7281 575.5945,688.5548 600.6968,713.6571 619.5235,719.9327 644.6258,719.9327 663.4525,713.6571 688.5548,701.1059 719.9327,669.7281 732.4838,644.6258 738.7594,625.7991 738.7594,600.6968 732.4838,581.8701"/>
+    <polyline points="327.1472,822.9194 513.5222,822.9194 513.5222,822.9194 327.1472,751.9194 327.1472,751.9194 513.5222,680.9194 513.5222,680.9194 327.1472,680.9194"/>
+    <polyline points="197.6587,766.9995 279.2411,685.417 279.2411,685.417 147.4541,553.63 147.4541,553.63 65.8717,635.2124"/>
+    <line x1="216.4854" x2="166.2808" y1="622.6613" y2="672.8659"/>
+    <polyline points="0.0,513.5222 0.0,327.1472 0.0,327.1472 124.25,513.5222 124.25,513.5222 124.25,327.1472"/>
+    <line x1="106.6629" x2="238.4499" y1="257.2766" y2="125.4896"/>
+    <line x1="150.5919" x2="62.7339" y1="301.2057" y2="213.3476"/>
+    <polyline points="300.5222,124.25 433.6472,124.25 460.2722,115.375 478.0222,97.625 486.8972,71.0 486.8972,53.25 478.0222,26.625 460.2722,8.875 433.6472,0.0 300.5222,0.0"/>
+    <polyline points="757.5861,169.4186 625.7991,37.6316 625.7991,37.6316 707.3815,219.6232 707.3815,219.6232 525.3899,138.0408 525.3899,138.0408 657.1769,269.8278"/>
+  </g>
+</svg>
