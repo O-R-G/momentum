@@ -7,66 +7,138 @@
 
 # arguments
 
-while getopts t:p opts; do
+while getopts t:v:p opts; do
    case ${opts} in
       t) TEXT=${OPTARG} ;;
+      v) VERSION=${OPTARG} ;;
       p) PLOT=true ;;
    esac
 done
 
-Y=0
-# SIZE=50       # MOMENTUM LOGO
-SIZE=284        # MOMENTUM POSTER 1 
+# echo $TEXT
+# echo $VERSION
+# echo $PLOT
+
+# VERSION 0 --> logo  ** flag not implemented todo **
+# VERSION 1 --> poster 1
+# VERSION 2 --> poster 2
+
+# init
+
 ORIGIN="0 0"
 CMD='vpype '
 OUT='out.svg'
 
-# text
+if [ "$VERSION" == "1" ]; then
 
-if [[ -z "$TEXT" ]]; then
-    # TEXT='MOMENTUM'
-    # TEXT='ALEXANDRAWAIERSTALL'
-    # TEXT='DISCOTECAFLAMINGSTAR'
-    # TEXT='OCTOBER1314152023'
-    TEXT='DAILY12TO4PM'
+    Y=0
+    # SIZE=50       # MOMENTUM LOGO
+    SIZE=284        # MOMENTUM POSTER 1 
+
+    # text
+
+    if [[ -z "$TEXT" ]]; then
+        # TEXT='MOMENTUM'
+        # TEXT='ALEXANDRAWAIERSTALL'
+        # TEXT='DISCOTECAFLAMINGSTAR'
+        # TEXT='OCTOBER1314152023'
+        TEXT='DAILY12TO4PM'
+    fi
+
+    # calculate circle
+
+    # size of circle (X) based on CHARS
+    # so always the same size type and same spacing
+    # but circle changes size
+    # height of each letter should be type size
+    # add them all up and get cicrumfrence
+    # from circumfrence, get radius
+    # C = 2 * PI * R, R = C / PI
+
+    CHARS=${#TEXT}
+    ROTATE=-`bc -l <<< "360 / $CHARS"`
+    PI=3.14159265358979323846264338327950288419716939937510
+    SIZE_ADJ=41      # adjust letterspacing with $RADIUS    
+    CIRCUM=`bc -l <<< "($SIZE - $SIZE_ADJ) * $CHARS"`
+    RADIUS=`bc -l <<< "$CIRCUM / (2 * $PI)"`
+    X=$RADIUS
+
+    foo=$TEXT
+    for (( i=0; i<${#foo}; i++ )); do
+        echo "${foo:$i:1}"
+        TEXT="${foo:$i:1}"
+        CMD+='text --align center --size '$SIZE' --position '$X' '$Y' "'$TEXT'" rotate --origin 0 0 -- '$ROTATE' '
+    done
+
+    # layout
+
+    # CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in '     #ALEXANDRAWEIRSTALL
+    # CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in '     #DISCOTECAFLAMINGSTAR
+    # CMD+='layout --fit-to-margins 1.5in --align left --landscape 11x17in '     #OCTOBER1314152023
+    # CMD+='layout --fit-to-margins 3.0in --align left --landscape 11x17in '     #DAILY12TO4PM
+
 fi
 
-# calculate circle
+if [ "$VERSION" == "2" ]; then
 
-# size of circle (X) based on CHARS
-# so always the same size type and same spacing
-# but circle changes size
-# height of each letter should be type size
-# add them all up and get cicrumfrence
-# from circumfrence, get radius
-# C = 2 * PI * R, R = C / PI
+    echo 'version '$VERSION
 
-CHARS=${#TEXT}
-ROTATE=-`bc -l <<< "360 / $CHARS"`
-PI=3.14159265358979323846264338327950288419716939937510
-SIZE_ADJ=41      # adjust letterspacing with $RADIUS    
-CIRCUM=`bc -l <<< "($SIZE - $SIZE_ADJ) * $CHARS"`
-RADIUS=`bc -l <<< "$CIRCUM / (2 * $PI)"`
-X=$RADIUS
+    SIZE=284
 
-foo=$TEXT
-for (( i=0; i<${#foo}; i++ )); do
-    echo "${foo:$i:1}"
-    # ROTATE=$(( ROTATE-5 ))
-    # ROTATE=$(( ROTATE+7 ))
-    # X=$(( X+7 ))
-    # Y=$(( Y-10 ))
-    TEXT="${foo:$i:1}"
-    CMD+='text --align center --size '$SIZE' --position '$X' '$Y' "'$TEXT'" rotate --origin 0 0 -- '$ROTATE' '
-    # CMD+='rotate -- 15 '
-done
+: '
+    TEXT='HAUSCHKA'
+    X=0
+    Y=810
+    W=6in
+    H=16in
 
-# layout
+    CMD+='text --align left --size '$SIZE' --position '$X' '$Y' "'$TEXT'" '
+    CMD+='pagesize 11inx17in scaleto --fit-dimensions '$W' '$H' '
 
-# CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in '     #ALEXANDRAWEIRSTALL
-# CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in '     #DISCOTECAFLAMINGSTAR
-# CMD+='layout --fit-to-margins 1.5in --align left --landscape 11x17in '     #OCTOBER1314152023
-# CMD+='layout --fit-to-margins 3.0in --align left --landscape 11x17in '     #DAILY12TO4PM
+    # better to just write a full cmd line here? rather than variables?
+    # vpype text --size 24 --position 250 800 "HAUSCHKA" pagesize 11inx17in linemerge scaleto --fit-dimensions 6in 16in write out-0.svg
+ 
+'
+    : ' 
+        this is a 
+        multiline 
+        bash comment
+    '
+    
+: '
+    TEXT='FEBRUARY2420241PM'
+    # X=-1050
+    X=-930
+    Y=380
+    W=9in
+    H=7in
+
+    CMD+='text --align left --size '$SIZE' --position '$X' '$Y' "'$TEXT'" '
+    CMD+='pagesize 11inx17in scaleto --fit-dimensions '$W' '$H' '
+'
+    
+# : '
+    # use array instead of lazy below
+    # see _programme.sh
+
+    TEXT='YINGYUNCHENG,'
+    TEXT2='SCOTTJENNINGS'
+    # X=-710
+    X=-380
+    Y=380
+    Y2=580
+    W=7in
+    H=9in
+    
+    CMD+='text --align left --size '$SIZE' --position '$X' '$Y' "'$TEXT'" '
+    CMD+='text --align left --size '$SIZE' --position '$X' '$Y2' "'$TEXT2'" '
+    CMD+='pagesize 11inx17in scaleto --fit-dimensions '$W' '$H' '
+# '
+
+fi
+
+
+# svg output
 
 CMD+='linemerge '
 CMD+='write '$OUT
