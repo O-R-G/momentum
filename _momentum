@@ -2,15 +2,16 @@
 
 # M O M E N T U M
 
-# Usage: _momentum -t TEXTTOPLOT -p
+# Usage: _momentum -t TEXTTOPLOT -v VERSION -l LINE -p
 # Plot text in circle at set size using vpype and axicli
 
 # arguments
 
-while getopts t:v:p opts; do
+while getopts t:v:l:p opts; do
    case ${opts} in
       t) TEXT=${OPTARG} ;;
       v) VERSION=${OPTARG} ;;
+      l) LINE=${OPTARG} ;;
       p) PLOT=true ;;
    esac
 done
@@ -38,11 +39,13 @@ if [ "$VERSION" == "1" ]; then
     # text
 
     if [[ -z "$TEXT" ]]; then
-        # TEXT='MOMENTUM'
-        # TEXT='ALEXANDRAWAIERSTALL'
-        # TEXT='DISCOTECAFLAMINGSTAR'
-        # TEXT='OCTOBER1314152023'
-        TEXT='DAILY12TO4PM'
+        case $LINE in
+            0) TEXT='MOMENTUM' ;;
+            1) TEXT='ALEXANDRAWAIERSTALL' ;;
+            2) TEXT='DISCOTECAFLAMINGSTAR' ;;
+            3) TEXT='OCTOBER1314152023' ;;
+            4) TEXT='DAILY12TO4PM' ;;
+        esac
     fi
 
     # calculate circle
@@ -82,61 +85,39 @@ fi
 if [ "$VERSION" == "2" ]; then
 
     echo 'version '$VERSION
-
     SIZE=284
 
-: '
-    TEXT='HAUSCHKA'
-    X=0
-    Y=810
-    W=6in
-    H=16in
+    if [ "$LINE" == "0" ]; then
+        TEXT='HAUSCHKA'
+        W=6in
+        H=16in
+        CMD+='text --size '$SIZE' "'$TEXT'" '
+    fi
+    if [ "$LINE" == "1" ]; then
+        TEXT='FEBRUARY2420241PM'
+        W=9in
+        H=7in
+        CMD+='text --size '$SIZE' "'$TEXT'" '
+    fi    
+    if [ "$LINE" == "2" ]; then
+        TEXT='YINGYUNCHENG,'
+        TEXT2='SCOTTJENNINGS'
+        X=200
+        W=7in
+        H=9in
+        HH=9
 
-    CMD+='text --align left --size '$SIZE' --position '$X' '$Y' "'$TEXT'" '
-    CMD+='pagesize 11inx17in scaleto --fit-dimensions '$W' '$H' '
+        # still a mess in here ** fix **
 
-    # better to just write a full cmd line here? rather than variables?
-    # vpype text --size 24 --position 250 800 "HAUSCHKA" pagesize 11inx17in linemerge scaleto --fit-dimensions 6in 16in write out-0.svg
- 
-'
-    : ' 
-        this is a 
-        multiline 
-        bash comment
-    '
-    
-: '
-    TEXT='FEBRUARY2420241PM'
-    # X=-1050
-    X=-930
-    Y=380
-    W=9in
-    H=7in
+        Y2=`echo "scale=2 ; $HH / 4.5" | bc`in
 
-    CMD+='text --align left --size '$SIZE' --position '$X' '$Y' "'$TEXT'" '
-    CMD+='pagesize 11inx17in scaleto --fit-dimensions '$W' '$H' '
-'
-    
-# : '
-    # use array instead of lazy below
-    # see _programme.sh
+        CMD+='text --align left --size '$SIZE' --position $X '0' "'$TEXT'" '
+        CMD+='text --align left --size '$SIZE' --position $X '$Y2' "'$TEXT2'" '
+    fi
 
-    TEXT='YINGYUNCHENG,'
-    TEXT2='SCOTTJENNINGS'
-    # X=-710
-    X=-380
-    Y=380
-    Y2=580
-    W=7in
-    H=9in
-    
-    CMD+='text --align left --size '$SIZE' --position '$X' '$Y' "'$TEXT'" '
-    CMD+='text --align left --size '$SIZE' --position '$X' '$Y2' "'$TEXT2'" '
-    CMD+='pagesize 11inx17in scaleto --fit-dimensions '$W' '$H' '
-# '
-
+    CMD+='scaleto --fit-dimensions '$W' '$H' '
+    CMD+='layout --align right --valign top --fit-to-margins 0.25in tabloid '
 fi
-
 
 # svg output
 
