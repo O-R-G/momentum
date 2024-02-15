@@ -40,7 +40,6 @@ if [ "$VERSION" == "1" ]; then
 
     if [[ -z "$TEXT" ]]; then
         case $LINE in
-            0) TEXT='MOMENTUM' ;;
             1) TEXT='ALEXANDRAWAIERSTALL' ;;
             2) TEXT='DISCOTECAFLAMINGSTAR' ;;
             3) TEXT='OCTOBER1314152023' ;;
@@ -75,48 +74,48 @@ if [ "$VERSION" == "1" ]; then
 
     # layout
 
-    # CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in '     #ALEXANDRAWEIRSTALL
-    # CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in '     #DISCOTECAFLAMINGSTAR
-    # CMD+='layout --fit-to-margins 1.5in --align left --landscape 11x17in '     #OCTOBER1314152023
-    # CMD+='layout --fit-to-margins 3.0in --align left --landscape 11x17in '     #DAILY12TO4PM
-
+    case $LINE in
+        1) CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in ' ;;
+        2) CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in ' ;;  
+        3) CMD+='layout --fit-to-margins 1.5in --align left --landscape 11x17in ' ;; 
+        4) CMD+='layout --fit-to-margins 3.0in --align left --landscape 11x17in ' ;;
+    esac
 fi
 
 if [ "$VERSION" == "2" ]; then
 
     echo 'version '$VERSION
     SIZE=284
-
-    if [ "$LINE" == "0" ]; then
+    if [ "$LINE" == "1" ]; then
         TEXT='HAUSCHKA'
         W=6in
         H=16in
-        CMD+='text --size '$SIZE' "'$TEXT'" '
+        X=0
+        Y=810
     fi
-    if [ "$LINE" == "1" ]; then
+    if [ "$LINE" == "2" ]; then
         TEXT='FEBRUARY2420241PM'
         W=9in
         H=7in
-        CMD+='text --size '$SIZE' "'$TEXT'" '
+        X=-920
+        Y=370
     fi    
-    if [ "$LINE" == "2" ]; then
+    if [ "$LINE" == "3" ]; then
         TEXT='YINGYUNCHENG,'
         TEXT2='SCOTTJENNINGS'
-        X=200
         W=7in
         H=9in
-        HH=9
-
-        # still a mess in here ** fix **
-
-        Y2=`echo "scale=2 ; $HH / 4.5" | bc`in
-
-        CMD+='text --align left --size '$SIZE' --position $X '0' "'$TEXT'" '
-        CMD+='text --align left --size '$SIZE' --position $X '$Y2' "'$TEXT2'" '
+        X=-375
+        Y=365
+        X2=-375
+        Y2=560
+        CMD+='text --align left --size '$SIZE' --position '$X2' '$Y2' "'$TEXT2'" '
     fi
 
+    CMD+='text --align left --size '$SIZE' --position '$X' '$Y' "'$TEXT'" '
     CMD+='scaleto --fit-dimensions '$W' '$H' '
-    CMD+='layout --align right --valign top --fit-to-margins 0.25in tabloid '
+    CMD+='pagesize tabloid '
+    # CMD+='layout --fit-to-margins .25in --landscape tabloid '
 fi
 
 # svg output
@@ -131,6 +130,8 @@ echo $CIRCUM
 echo $RADIUS
 eval $CMD
 open out.svg
+# cp out.svg out-$LINE.svg
+# open out-$LINE.svg
 # open -a Safari out.svg
 if [[ -n "$PLOT" ]]; then
     echo "PLOTTING ..."
