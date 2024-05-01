@@ -23,6 +23,7 @@ done
 # VERSION 0 --> logo  ** flag not implemented todo **
 # VERSION 1 --> poster 1
 # VERSION 2 --> poster 2
+# VERSION 3 --> poster 3
 
 # init
 
@@ -116,6 +117,64 @@ if [ "$VERSION" == "2" ]; then
     CMD+='scaleto --fit-dimensions '$W' '$H' '
     CMD+='pagesize tabloid '
     # CMD+='layout --fit-to-margins .25in --landscape tabloid '
+fi
+
+if [ "$VERSION" == "3" ]; then
+
+    Y=0
+    # SIZE=284        
+    SIZE=1 
+
+    # text
+
+    if [[ -z "$TEXT" ]]; then
+        case $LINE in
+            1) TEXT='MAY10202412TO2PM' ;;
+            2) TEXT='MAY12202412TO4PM' ;;
+        esac
+    fi
+
+    # calculate sine wave
+
+    # Y = sin(X) (X & Y in radians)
+    # then get tangent to the curve at each X 
+    # using cos() and arctan()
+    # TK
+
+    PI=3.14159265358979323846264338327950288419716939937510
+    FREQUENCY=1  
+    AMPLITUDE=1  
+    PERIOD=6.28318531  
+    # CHARS=${#TEXT}
+    # ROTATE=-`bc -l <<< "360 / $CHARS"`
+
+    # radians=0
+    X=0
+    step=$(echo "$PI / 8" | bc -l)  
+
+    # while [ $(echo "$radians <= $PERIOD" | bc -l) -eq 1 ]; do
+    #    sine=$(echo "scale=4; $AMPLITUDE * s($radians * $FREQUENCY)" | bc -l)
+    #    echo "X: $radians, Y: $sine"
+    #    radians=$(echo "$radians + $step" | bc -l)
+    # done
+
+    foo=$TEXT
+    for (( i=0; i<${#foo}; i++ )); do
+        echo "${foo:$i:1}"
+        TEXT="${foo:$i:1}"
+        Y=$(echo "scale=4; $AMPLITUDE * s($X * $FREQUENCY)" | bc -l)
+        echo "X: $X, Y: $Y"
+        X=$(echo "$X + $step" | bc -l)     
+        # CMD+='text --align center --size '$SIZE' --position '$X' '$Y' "'$TEXT'" rotate --origin 0 0 -- '$ROTATE' '
+        CMD+='text --align center --size '$SIZE' --position '$X' '$Y' "'$TEXT'" '
+    done
+
+    # layout
+
+    case $LINE in
+        1) CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in ' ;;
+        2) CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in ' ;;  
+    esac
 fi
 
 # svg output
