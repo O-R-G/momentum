@@ -121,10 +121,6 @@ fi
 
 if [ "$VERSION" == "3" ]; then
 
-    Y=0
-    # SIZE=284        
-    SIZE=1 
-
     # text
 
     if [[ -z "$TEXT" ]]; then
@@ -141,32 +137,44 @@ if [ "$VERSION" == "3" ]; then
     # using cos() and arctan()
     # TK
 
-    PI=3.14159265358979323846264338327950288419716939937510
-    FREQUENCY=1  
-    AMPLITUDE=1  
-    PERIOD=6.28318531  
+    SIZE=0.5
+    PI=3.14159265
+    FREQUENCY=1.0
+    AMPLITUDE=0.5
+    PERIOD=6.28318531
+    SCALE=1.0
     # CHARS=${#TEXT}
     # ROTATE=-`bc -l <<< "360 / $CHARS"`
+    Y=0
 
-    # radians=0
     X=0
-    step=$(echo "$PI / 8" | bc -l)  
-
-    # while [ $(echo "$radians <= $PERIOD" | bc -l) -eq 1 ]; do
-    #    sine=$(echo "scale=4; $AMPLITUDE * s($radians * $FREQUENCY)" | bc -l)
-    #    echo "X: $radians, Y: $sine"
-    #    radians=$(echo "$radians + $step" | bc -l)
-    # done
+    STEP=$(echo "$PI / 8" | bc -l)  
+    LAYER=0
 
     foo=$TEXT
     for (( i=0; i<${#foo}; i++ )); do
-        echo "${foo:$i:1}"
+        ((LAYER++))
         TEXT="${foo:$i:1}"
+
+        # calculate Y using sin(X)
         Y=$(echo "scale=4; $AMPLITUDE * s($X * $FREQUENCY)" | bc -l)
-        echo "X: $X, Y: $Y"
-        X=$(echo "$X + $step" | bc -l)     
-        # CMD+='text --align center --size '$SIZE' --position '$X' '$Y' "'$TEXT'" rotate --origin 0 0 -- '$ROTATE' '
-        CMD+='text --align center --size '$SIZE' --position '$X' '$Y' "'$TEXT'" '
+
+        # calculate tangent slope at (X,Y) using cos(X)
+        M=$(echo "c($X)" | bc -l)
+
+        # calculate slope angle (in degrees) using arctan(X)
+        ROTATE=$(echo "(a($M) * 180 / $PI) * -1" | bc -l)
+
+        echo "${foo:$i:1}"
+        echo "LAYER: "$LAYER
+        echo "X: "$X
+        echo "Y: "$Y
+        echo "R: "$ROTATE
+        echo "M: "$M
+
+        CMD+='text --align left --size '$SIZE' --position '$X' '$Y' --layer '$LAYER' "'$TEXT'" rotate --layer '$LAYER' -- '$ROTATE' '
+
+        X=$(echo "$X + ($STEP * $SCALE)" | bc -l)
     done
 
     # layout
