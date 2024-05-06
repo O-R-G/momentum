@@ -134,21 +134,22 @@ if [ "$VERSION" == "3" ]; then
     # then get tangent by calc slope
     # and arctan(slope) to get degrees
 
+    # parameters
     SIZE=0.5
     PI=3.14159265
-    FREQUENCY=1.0
+    FREQUENCY=1.5
     AMPLITUDE=0.25
     PERIOD=6.28318531
-    SCALE=1.0
-    # CHARS=${#TEXT}
-    # ROTATE=-`bc -l <<< "360 / $CHARS"`
-
-    X=0     
-    Y=0
-    _X=0    # previous X
-    _Y=0    # previous Y 
+    SCALE=1.25
+    PI_OFFSET=2.0
+    
+    # constants
+    X=$(echo "$PI_OFFSET * $PI" | bc -l)
+    Y=$(echo "$AMPLITUDE * s($X * $FREQUENCY)" | bc -l)
+    _X=$X       # previous X
+    _Y=$Y       # previous Y 
     LAYER=0
-    STEP=$(echo "$PI / 8" | bc -l)  
+    STEP=$(echo "$PI / 7" | bc -l)  
 
     foo=$TEXT
     for (( i=0; i<${#foo}; i++ )); do
@@ -159,13 +160,14 @@ if [ "$VERSION" == "3" ]; then
         X=$(echo "$X + ($STEP * $SCALE)" | bc -l)
 
         # calculate Y using sin(X)
-        Y=$(echo "scale=4; $AMPLITUDE * s($X * $FREQUENCY)" | bc -l)
+        Y=$(echo "$AMPLITUDE * s($X * $FREQUENCY)" | bc -l)
 
         # calculate slope 
         M=$(echo "($Y - $_Y) / ($X - $_X)" | bc -l)
   
         # calculate slope in degrees using arctan(M)
         ROTATE=$(echo "(a($M) * 180 / $PI)" | bc -l)
+        # ROTATE=0
 
         echo
         echo "${foo:$i:1}"
@@ -183,14 +185,11 @@ if [ "$VERSION" == "3" ]; then
         _X=$X
         _Y=$Y
     done
-    CMD+='color blue '
 
     # layout
 
-    case $LINE in
-        1) CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in ' ;;
-        2) CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in ' ;;  
-    esac
+    CMD+='color blue '
+    CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in '
 fi
 
 # svg output
