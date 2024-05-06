@@ -140,42 +140,53 @@ if [ "$VERSION" == "3" ]; then
     SIZE=0.5
     PI=3.14159265
     FREQUENCY=1.0
-    AMPLITUDE=0.5
+    AMPLITUDE=0.75
     PERIOD=6.28318531
     SCALE=1.0
     # CHARS=${#TEXT}
     # ROTATE=-`bc -l <<< "360 / $CHARS"`
-    Y=0
 
-    X=0
-    STEP=$(echo "$PI / 8" | bc -l)  
+    X=0     
+    Y=0
+    _X=0    # previous X
+    _Y=0    # previous Y 
     LAYER=0
+    STEP=$(echo "$PI / 8" | bc -l)  
 
     foo=$TEXT
     for (( i=0; i<${#foo}; i++ )); do
         ((LAYER++))
         TEXT="${foo:$i:1}"
 
+        # increment X
+        X=$(echo "$X + ($STEP * $SCALE)" | bc -l)
+
         # calculate Y using sin(X)
         Y=$(echo "scale=4; $AMPLITUDE * s($X * $FREQUENCY)" | bc -l)
 
-        # calculate tangent slope at (X,Y) using cos(X)
-        M=$(echo "c($X)" | bc -l)
+        # calculate slope 
+        M=$(echo "($Y - $_Y) / ($X - $_X)" | bc -l)
+  
+        # calculate slope in degrees using arctan(M)
+        ROTATE=$(echo "(a($M) * 180 / $PI)" | bc -l)
 
-        # calculate slope angle (in degrees) using arctan(X)
-        ROTATE=$(echo "(a($M) * 180 / $PI) * -1" | bc -l)
-
+        echo
         echo "${foo:$i:1}"
         echo "LAYER: "$LAYER
+        echo "_X: "$_X
+        echo "_Y: "$_Y
         echo "X: "$X
         echo "Y: "$Y
-        echo "R: "$ROTATE
         echo "M: "$M
+        echo "R: "$ROTATE
 
-        CMD+='text --align left --size '$SIZE' --position '$X' '$Y' --layer '$LAYER' "'$TEXT'" rotate --layer '$LAYER' -- '$ROTATE' '
+        CMD+='text --align left --size '$SIZE' --position '$_X' '$_Y' --layer '$LAYER' "'$TEXT'" rotate --layer '$LAYER' -- '$ROTATE' '
+        # CMD+='line --layer '$LAYER' '$X' '$Y' '$_X' '$_Y' '
 
-        X=$(echo "$X + ($STEP * $SCALE)" | bc -l)
+        _X=$X
+        _Y=$Y
     done
+    CMD+='color blue '
 
     # layout
 
@@ -196,10 +207,10 @@ echo $CHARS
 echo $CIRCUM
 echo $RADIUS
 eval $CMD
-open out.svg
+# open out.svg
 # cp out.svg out-$LINE.svg
 # open out-$LINE.svg
-# open -a Safari out.svg
+open -a Safari out.svg
 if [[ -n "$PLOT" ]]; then
     echo "PLOTTING ..."
     axicli out.svg --model 2 --progress
