@@ -124,8 +124,14 @@ if [ "$VERSION" == "3" ]; then
     # text
     if [[ -z "$TEXT" ]]; then
         case $LINE in
-            1) TEXT='MAY10202412PM' ;;
-            2) TEXT='MAY12202412PM' ;;
+            1) 
+            TEXT='MAY10202412PM' 
+            PI_OFFSET=1.0 
+            ;;
+            2) 
+            TEXT='MAY12202412PM' 
+            PI_OFFSET=0.0 
+            ;;
         esac
     fi
 
@@ -141,7 +147,7 @@ if [ "$VERSION" == "3" ]; then
     AMPLITUDE=0.25
     PERIOD=6.28318531
     SCALE=1.25
-    PI_OFFSET=0.0
+    # PI_OFFSET=0.0     # set above by line
     
     # constants
     X=$(echo "$PI_OFFSET * $PI" | bc -l)
@@ -161,7 +167,7 @@ if [ "$VERSION" == "3" ]; then
 
         # nudge if 'A' for kerning
         if [[ "$TEXT" = "A" ]]; then
-            _X=$(echo "($_X * 1.01)" | bc -l)
+            _X=$(echo "($_X * 1.025)" | bc -l)
         fi
 
         # calculate Y using sin(X)
