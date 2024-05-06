@@ -122,7 +122,6 @@ fi
 if [ "$VERSION" == "3" ]; then
 
     # text
-
     if [[ -z "$TEXT" ]]; then
         case $LINE in
             1) TEXT='MAY10202412TO2PM' ;;
@@ -131,16 +130,14 @@ if [ "$VERSION" == "3" ]; then
     fi
 
     # calculate sine wave
-
     # Y = sin(X) (X & Y in radians)
-    # then get tangent to the curve at each X 
-    # using cos() and arctan()
-    # TK
+    # then get tangent by calc slope
+    # and arctan(slope) to get degrees
 
     SIZE=0.5
     PI=3.14159265
     FREQUENCY=1.0
-    AMPLITUDE=0.75
+    AMPLITUDE=0.25
     PERIOD=6.28318531
     SCALE=1.0
     # CHARS=${#TEXT}
