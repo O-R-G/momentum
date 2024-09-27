@@ -24,6 +24,7 @@ done
 # VERSION 1 --> poster 1
 # VERSION 2 --> poster 2
 # VERSION 3 --> poster 3
+# VERSION 4 --> poster 4
 
 # init
 
@@ -54,9 +55,9 @@ if [ "$VERSION" == "1" ]; then
     # so always the same size type and same spacing
     # but circle changes size
     # height of each letter should be type size
-    # add them all up and get cicrumfrence
-    # from circumfrence, get radius
-    # C = 2 * PI * R, R = C / PI
+    # add them all up and get circumference
+    # from circumference, get radius
+    # C = 2 * PI * R, R = C / (2 * PI)
 
     CHARS=${#TEXT}
     ROTATE=-`bc -l <<< "360 / $CHARS"`
@@ -203,6 +204,28 @@ if [ "$VERSION" == "3" ]; then
     CMD+='layout --fit-to-margins 0.25in --align left --landscape 11x17in '
 fi
 
+if [ "$VERSION" == "4" ]; then
+
+    echo 'version '$VERSION
+
+    # VERSION 4 --> current time
+
+    CMD='vpype '
+
+    # set font size and initial positions
+    SIZE=24
+    X=0
+    Y=0
+
+    TIME=("$(date "+%Y%m%d %H:%M:%S %z" | sed 's/\(.*\)\([+-][0-9][0-9]\)[0-9][0-9]$/\1GMT\2/')")
+    # add a text command for the time
+    CMD+='text --align left --size '$SIZE' --position '$X' '$Y' "'$TIME'" '
+
+    # layout
+    CMD+='color orange '
+    CMD+='layout --fit-to-margins 0.25in --landscape 11x17in '
+fi
+
 # svg output
 
 CMD+='linemerge '
@@ -210,9 +233,9 @@ CMD+='write '$OUT
 
 # print
 
-echo $CHARS
-echo $CIRCUM
-echo $RADIUS
+# echo $CHARS
+# echo $CIRCUM
+# echo $RADIUS
 eval $CMD
 # open out.svg
 # cp out.svg out-$LINE.svg
@@ -220,6 +243,6 @@ eval $CMD
 open -a Safari out.svg
 if [[ -n "$PLOT" ]]; then
     echo "PLOTTING ..."
-    axicli out.svg --model 2 --progress
+    axicli out.svg --model 2
 fi
 exit
