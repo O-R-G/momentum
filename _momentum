@@ -222,9 +222,14 @@ if [ "$VERSION" == "4" ]; then
     # add a text command for the time
     CMD+='text --align left --size '$SIZE' --position '$X' '$Y' "'$TIME'" '
 
+    # calculate slope 
+    M=$(echo "(11) / (17)" | bc -l)
+    PI=3.14159265
+    ROTATE=$(echo "(a($M) * 180 / $PI)" | bc -l)
     # layout
-    CMD+='color orange '
+    CMD+='color purple '
     CMD+='layout --fit-to-margins 0.25in --landscape 11x17in '
+    CMD+='rotate '$ROTATE' '
 fi
 
 # svg output
